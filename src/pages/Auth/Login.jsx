@@ -10,6 +10,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Button from '@mui/material/Button';
 import {Link} from 'react-router-dom'
 import validator from "email-validator";
+import axiosInstance from '../../utils/axiosInstance'
 
 import Nav from './Nav'
 
@@ -30,11 +31,17 @@ const [password, setPassword] = useState('');
 const [errorEmail, setErrorEmail] = useState('');
 const [errorPassword, setErrorPassword] = useState('');
 
-const handleLogin = (e) => {    
+const handleLogin = async (e) => {    
     e.preventDefault();
     validator.validate(email)?setErrorEmail(''):setErrorEmail("Invalid Email")
     password? setErrorPassword(''):setErrorPassword("Invalid Password")
 
+    try{
+      const response = await axiosInstance.post('/api/auth/login', {email, password})
+      console.log(response.data)
+    }catch(error){
+        console.log(error.response.data)
+    }
 }
 
 return (
