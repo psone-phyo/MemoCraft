@@ -19,10 +19,11 @@ function ResponsiveAppBar({ userInfo }) {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navigate = useNavigate();
   const settings = [
-    { name: "username: " + userInfo?.username },
+    { name: "username: " + userInfo?.name },
     { name: "gmail: " + userInfo?.email },
     { name: "logout", action: () => {localStorage.clear(); navigate("/login")}},
   ];
+  
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -132,7 +133,7 @@ function ResponsiveAppBar({ userInfo }) {
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <div className="rounded-full bg-gray-200 w-[35px] h-[35px] flex justify-center items-center">
                   <div className="p-2 text-sky-900">
-                    {initials(userInfo?.username || "User")}
+                    {initials(userInfo?.name || "User")}
                   </div>
                 </div>
               </IconButton>

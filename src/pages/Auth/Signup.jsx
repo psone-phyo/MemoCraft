@@ -8,9 +8,10 @@ import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Button from '@mui/material/Button';
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import validator from "email-validator";
 import Nav from './Nav'
+import axiosInstance from '../../utils/axiosInstance'
 
 const Signup = () => {
 
@@ -25,6 +26,8 @@ const handleMouseUpPassword = (event) => {
   event.preventDefault();
 };
 
+const navigate = useNavigate();
+
 const [name, setName] = useState('');
 const [email, setEmail] = useState('');
 const [password, setPassword] = useState('');
@@ -33,21 +36,39 @@ const [errorEmail, setErrorEmail] = useState('');
 const [errorPassword, setErrorPassword] = useState('');
 const [errorName, setErrorName] = useState('');
 const [errorConfirmPassword, setErrorConfirmPassword] = useState('');
-
-const handleLogin = (e) => {    
+  
+const handleLogin = async (e) => {    
     e.preventDefault();
-    validator.validate(email)?setErrorEmail(''):setErrorEmail("Invalid Email")
+    setErrorName('')
+    setErrorEmail('')
+    setErrorPassword('')  
+    setErrorConfirmPassword('')
 
-    if (password){
-        password.length < 8? setErrorPassword('Password must be at least 8 characters'):setErrorPassword('')
-    }else[
-        setErrorPassword("Password is required")
-    ]
-    name? setErrorName(''):setErrorName("Name is required")
-    password === confirmPassword? setErrorConfirmPassword(''):setErrorConfirmPassword("Password does not match")
+      try{
+        const response = await axiosInstance.post('/api/auth/register', {name,email, password, confirmPassword})
+        if (response.data.Token){
+          localStorage.setItem('token', response.data.Token)
+          navigate('/');
+        }
+  
+      }catch(error){
+        if(error.response.data.errors){
+          error.response.data.errors.slice().reverse().map((e)=>{
+            if (e.path === 'name') setErrorName(e.msg)
+            if (e.path === 'email') setErrorEmail(e.msg)
+            if (e.path === 'password') setErrorPassword(e.msg)
+            if (e.path === 'confirmPassword') setErrorConfirmPassword(e.msg)
+          })
 
+          console.log(error.response);
+          
+        }else{
+          console.log(error.response);
+        }
+        
+      }
+} 
 
-}
 
   return (
     <div>
@@ -71,7 +92,7 @@ const handleLogin = (e) => {
                 <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
                 <Input
                 className='w-full'
-            id="standard-adornment-password"
+            id="standard-adornment-password1"
             type={showPassword ? 'text' : 'password'}
             endAdornment={
               <InputAdornment position="end">
