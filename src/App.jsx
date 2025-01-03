@@ -4,18 +4,16 @@ import Home from './pages/Home/Home';
 import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
 
-const router = <>
-  <Router>
+function App() {
+  return (
+    <Router>
       <Routes>
-        <Route  path='/' element={<Home/>}/>
-        <Route  path='/login' element={<Login/>}/>
-        <Route  path='/signup' element={<Signup/>}/>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </Router>
-  </>
-
-function App() {
-  return <div>{router}</div>
+  );
 }
 
 export default App

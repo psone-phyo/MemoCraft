@@ -7,7 +7,6 @@ const Nav = () => {
             <div>
                 Note App
             </div>
-           
         </div>
     </div>
   )

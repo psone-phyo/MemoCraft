@@ -8,8 +8,7 @@ import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Button from '@mui/material/Button';
-import {Link} from 'react-router-dom'
-import validator from "email-validator";
+import {Link, useNavigate} from 'react-router-dom'
 import axiosInstance from '../../utils/axiosInstance'
 
 import Nav from './Nav'
@@ -17,6 +16,7 @@ import Nav from './Nav'
 const Login = () => {
 const [showPassword, setShowPassword] = React.useState(false);
 const handleClickShowPassword = () => setShowPassword((show) => !show);
+const navigate = useNavigate();
 
 const handleMouseDownPassword = (event) => {
   event.preventDefault();
@@ -33,14 +33,19 @@ const [errorPassword, setErrorPassword] = useState('');
 
 const handleLogin = async (e) => {    
     e.preventDefault();
-    validator.validate(email)?setErrorEmail(''):setErrorEmail("Invalid Email")
-    password? setErrorPassword(''):setErrorPassword("Invalid Password")
+    setErrorEmail('')
+    setErrorPassword('')
 
     try{
       const response = await axiosInstance.post('/api/auth/login', {email, password})
-      console.log(response.data)
+      if (response.data.Token){
+        localStorage.setItem('token', response.data.Token)
+        navigate('/');
+      }
+
     }catch(error){
-        console.log(error.response.data)
+        if(error.response.data.errors.email) setErrorEmail(error.response.data.errors.email)
+        if(error.response.data.errors.password) setErrorPassword(error.response.data.errors.password)
     }
 }
 
