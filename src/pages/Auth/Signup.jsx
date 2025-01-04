@@ -9,7 +9,6 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Button from '@mui/material/Button';
 import {Link, useNavigate} from 'react-router-dom'
-import validator from "email-validator";
 import Nav from './Nav'
 import axiosInstance from '../../utils/axiosInstance'
 

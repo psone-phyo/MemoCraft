@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -6,15 +6,30 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Autocomplete from "@mui/material/Autocomplete";
 import Stack from "@mui/material/Stack";
 import axiosInstance from "../utils/axiosInstance";
+import { faPen } from "@fortawesome/free-solid-svg-icons";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 
-export default function FormDialog({getNotes}) {
-  const [open, setOpen] = React.useState(false);
+export default function FormDialog({
+  id,
+  oldTitle,
+  oldContent,
+  oldTags,
+  getNotes,
+}) {
+  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
+    if (oldTitle) setTitle(oldTitle);
+    if (oldContent) setContent(oldContent);
+    if (oldTags) {
+      const tags = oldTags.map((e) => ({ title: e }));
+      setTags(tags);
+    }
+    console.log(tags);
     setOpen(true);
   };
 
@@ -87,37 +102,44 @@ export default function FormDialog({getNotes}) {
     { title: "Festival" },
   ];
 
-  const [title,setTitle] = React.useState(null);
-  const [content,setContent] = React.useState(null);
-  const [tags,setTags] = React.useState([]);
+  const [title, setTitle] = useState(null);
+  const [content, setContent] = useState(null);
+  const [tags, setTags] = useState([]);
 
   const handlePost = async () => {
-    try{
-      const tagArray = tags.map((e)=>e.title);
-      const res = await axiosInstance.post('/api/notes/create-note', {title,content,tags: tagArray});
-      if(res.data && res.data.data){
+    try {
+      const tagArray = tags.map((e) => e.title);
+      const res = await axiosInstance.put(`/api/notes/update/${id}`, {
+        title,
+        content,
+        tags: tagArray,
+      });
+      if (res.data && res.data.data) {
         getNotes();
       }
-      setTitle('');
-      setContent('');
+      setTitle("");
+      setContent("");
       setTags([]);
-      
-    }catch(e){
-      setTitle('');
-      setContent('');
+    } catch (e) {
+      setTitle("");
+      setContent("");
       setTags([]);
       console.log(e.response);
-    } 
-
-  }
+    }
+  };
 
   return (
     <React.Fragment>
-      <Button onClick={handleClickOpen}>
-        <div className="p-3 rounded-full bg-sky-300 w-[100px] h-[100px] flex justify-center items-center">
-          <FontAwesomeIcon icon={faPlus} className="text-4xl " />
-        </div>
-      </Button>
+      <button onClick={handleClickOpen}>
+        <Tooltip title="Delete">
+          <IconButton>
+            <FontAwesomeIcon
+              icon={faPen}
+              className=" hover:scale-125 transition-all text-md"
+            />
+          </IconButton>
+        </Tooltip>
+      </button>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -142,7 +164,7 @@ export default function FormDialog({getNotes}) {
               fullWidth
               variant="standard"
               value={title}
-              onChange={(e)=>setTitle(e.target.value)}
+              onChange={(e) => setTitle(e.target.value)}
             />
           </div>
 
@@ -156,34 +178,33 @@ export default function FormDialog({getNotes}) {
               variant="standard"
               className="w-full"
               value={content}
-              onChange={(e)=>setContent(e.target.value)}
+              onChange={(e) => setContent(e.target.value)}
             />
           </div>
 
           <Stack spacing={3} sx={{ width: "100%" }}>
-          <Autocomplete
-            multiple
-            id="tags-standard"
-            options={taglist}
-            getOptionLabel={(option) => option.title}
-            value={tags}
-            onChange={(e, value) => setTags(value)}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="standard"
-                label="Tag"
-                placeholder="Favorites"
-              />
-            )}
-          />
-
+            <Autocomplete
+              multiple
+              id="tags-standard"
+              options={taglist}
+              getOptionLabel={(option) => option.title}
+              value={tags}
+              onChange={(e, value) => setTags(value)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="standard"
+                  label="Tag"
+                  placeholder="Favorites"
+                />
+              )}
+            />
           </Stack>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit">Add</Button>
-        </DialogActions>        
+          <Button type="submit">Save</Button>
+        </DialogActions>
       </Dialog>
     </React.Fragment>
   );
