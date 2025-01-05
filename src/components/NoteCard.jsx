@@ -66,7 +66,7 @@ const NoteCard = ({id, title, date, content, tags, isPinned,getNotes}) => {
                 <div>
                 <Tooltip title={Pinned === true ? 'Unpin' : 'Pin'}>
                         <IconButton onClick={handlePin}>
-                        <FontAwesomeIcon icon={faThumbtack} style={{color: "#74C0FC"}} className={`text-xl hover:scale-125 transition-all ${Pinned === true && 'rotate-90'}`}/>
+                        <FontAwesomeIcon icon={faThumbtack} className={`text-xl hover:scale-125 transition-all text-gray-400 ${Pinned === true && 'rotate-90 text-sky-400'}`}/>
                         </IconButton>
                     </Tooltip>
                     

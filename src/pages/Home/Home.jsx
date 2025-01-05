@@ -7,6 +7,11 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import Skeleton from "@mui/material/Skeleton";
 import Box from "@mui/material/Box";
+import SearchButton from "../../components/SearchButton";
+import noNotesImage from '../../assets/noNotes.png'
+import noConnection from '../../assets/noConnection.png'
+import noData from '../../assets/noData.jpg'
+
 
 const Home = () => {
   const [userInfo, setuserInfo] = useState(null);
@@ -29,22 +34,17 @@ const Home = () => {
   };
 
   const [Notes, setNotes] = useState([]);
+  const [status, setStatus] = useState("loading");
   const getNotes = async () => {
     try {
       const response = await axiosInstance.get("/api/notes");
       setNotes(response.data.data);
+      setStatus("success");
     } catch (e) {
       console.log(e.response);
+      setStatus("failed");
     }
   };
-
-  // const loading = () => {
-  //   setNotes(null);
-  // }
-
-  // setTimeout(() => {
-  //   if (!Notes || Notes.length === 0) loading();
-  // }, 3000);
 
   useEffect(() => {
     getuserInfo();
@@ -52,12 +52,12 @@ const Home = () => {
     return () => {};
   }, []);
 
-  const skeleton = [1, 2, 3, 4, 5, 6,7,8,9];
+  const skeleton = [1, 2, 3, 4, 5, 6,7,8,9,10,11,12];
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className={`min-h-screen ${status === 'success' && Notes.length > 0 ? 'bg-gray-50' : ''}`}>
       <Nav userInfo={userInfo} />
-      {Notes && Notes.length === 0 && ( 
+      {status === "loading" && ( 
         <div className="my-5 mx-auto w-[95%] lg:w-[80%] grid lg:grid-cols-3 sm:grid-cols-2 gap-3 transition-all">
           {skeleton.map((s) => (
             <div key={s}>
@@ -71,20 +71,21 @@ const Home = () => {
           ))}
         </div>
       )}
-{/* 
-      {Notes === null &&  (
+
+      {status === "success" && Notes.length===0 &&  (
             <div className="text-center mt-5">
           <div className="flex flex-col items-center justify-center h-[60vh]">
+              <img src={noData} alt="No Notes" width={150} />
             <h1 className="text-4xl font-bold">No Notes Found</h1>
             <p className="text-lg text-gray-500">
               Create a new note to get started
             </p>
-          </div>
+          </div>  
         </div>
-      )} */}
+      )}
 
       <div className="my-5 mx-auto w-[95%] lg:w-[80%] grid lg:grid-cols-3 sm:grid-cols-2 gap-3 transition-all">
-        {Notes && Notes.map((note) => (
+        {Notes && Notes.length > 0 && Notes.map((note) => (
           <div key={note._id}>
             <NoteCard
               id={note._id}
