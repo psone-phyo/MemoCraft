@@ -22,6 +22,7 @@
     "email-validator": "^2.0.4",
     "font-awesome": "^4.7.0",
     "initials": "^3.1.2",
+    "jwt-decode": "^4.0.0",
     "moment": "^2.30.1",
     "postcss": "^8.4.49",
     "preline": "^2.7.0",

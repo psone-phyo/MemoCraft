@@ -108,7 +108,7 @@ const NoteCard = ({id, title, date, content, tags, isPinned,getNotes}) => {
               
             >
               <Fade in={open}>
-                <Box sx={style} className="bg-sky-50 rounded-md border border-sky-500 p-5 h-[80%] w-[80%] lg:w-1/2 md:w-8/12 overflow-auto">
+                <Box sx={style} className="bg-gray-100 rounded-md border border-sky-300 p-5 h-[80%] w-[80%] lg:w-1/2 md:w-8/12 overflow-auto">
                 <div className="max-h-[70vh] overflow-auto  [&::-webkit-scrollbar]:w-2
                 [&::-webkit-scrollbar-track]:bg-sky-100
                 [&::-webkit-scrollbar-thumb]:bg-sky-300

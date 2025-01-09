@@ -6,11 +6,8 @@ import axiosInstance from "../../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import Skeleton from "@mui/material/Skeleton";
-import Box from "@mui/material/Box";
-import SearchButton from "../../components/SearchButton";
 import noNotesImage from '../../assets/noNotes.png'
 import noConnection from '../../assets/noConnection.png'
-import noData from '../../assets/noData.jpg'
 
 
 const Home = () => {
@@ -41,7 +38,10 @@ const Home = () => {
       setNotes(response.data.data);
       setStatus("success");
     } catch (e) {
-      console.log(e.response);
+      if (e.response.status === 401) {
+        localStorage.clear();
+        navigate("/login");
+      }
       setStatus("failed");
     }
   };
@@ -73,15 +73,28 @@ const Home = () => {
       )}
 
       {status === "success" && Notes.length===0 &&  (
-            <div className="text-center mt-5">
-          <div className="flex flex-col items-center justify-center h-[60vh]">
-              <img src={noData} alt="No Notes" width={150} />
-            <h1 className="text-4xl font-bold">No Notes Found</h1>
-            <p className="text-lg text-gray-500">
-              Create a new note to get started
-            </p>
-          </div>  
-        </div>
+            
+        <div className="text-center mt-5">
+        <div className="flex flex-col items-center justify-center h-[60vh]">
+            <img src={noNotesImage} alt="No Notes" width={250} />
+          <h1 className="text-4xl font-bold">No Notes Found</h1>
+          <p className="text-lg text-gray-500">
+            Create a new note to get started
+          </p>
+        </div>  
+      </div>
+      )}
+
+      {status === 'failed' && (
+        <div className="text-center mt-5">
+        <div className="flex flex-col items-center justify-center h-[60vh]">
+            <img src={noConnection} alt="No Notes" width={250} />
+          <h1 className="text-4xl font-bold">Connection Lost</h1>
+          <p className="text-lg text-gray-500">
+            Check your connection please!
+          </p>
+        </div>  
+      </div>
       )}
 
       <div className="my-5 mx-auto w-[95%] lg:w-[80%] grid lg:grid-cols-3 sm:grid-cols-2 gap-3 transition-all">

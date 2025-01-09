@@ -10,6 +10,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Button from '@mui/material/Button';
 import {Link, useNavigate} from 'react-router-dom'
 import axiosInstance from '../../utils/axiosInstance'
+import {jwtDecode} from "jwt-decode";
 
 import Nav from './Nav'
 
@@ -39,7 +40,20 @@ const handleLogin = async (e) => {
     try{
       const response = await axiosInstance.post('/api/auth/login', {email, password})
       if (response.data.Token){
-        localStorage.setItem('token', response.data.Token)
+        const token = response.data.Token
+        localStorage.setItem('token', token)
+        const decodedToken = jwtDecode(token);
+        const expirationTime = decodedToken.exp * 1000; // Convert to milliseconds
+        const currentTime = Date.now();
+      
+        // Calculate the remaining time
+        const timeLeft = expirationTime - currentTime;
+      
+        // Clear token after it expires
+        setTimeout(() => {
+          localStorage.removeItem("token");
+          console.log("Token expired and removed from local storage.");
+        }, timeLeft);
         navigate('/');
       }
 

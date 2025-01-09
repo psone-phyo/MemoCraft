@@ -10,12 +10,14 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Autocomplete from "@mui/material/Autocomplete";
 import Stack from "@mui/material/Stack";
 import axiosInstance from "../utils/axiosInstance";
-
+import { useNavigate } from "react-router-dom";
+import Alert from '@mui/material/Alert';
 export default function FormDialog({getNotes}) {
   const [open, setOpen] = React.useState(false);
-
+  const navigate = useNavigate();
   const handleClickOpen = () => {
-    setOpen(true);
+      setOpen(true);
+    
   };
 
   const handleClose = () => {
@@ -90,7 +92,7 @@ export default function FormDialog({getNotes}) {
   const [title,setTitle] = React.useState(null);
   const [content,setContent] = React.useState(null);
   const [tags,setTags] = React.useState([]);
-
+  
   const handlePost = async () => {
     try{
       const tagArray = tags.map((e)=>e.title);
@@ -107,6 +109,9 @@ export default function FormDialog({getNotes}) {
       setContent('');
       setTags([]);
       console.log(e.response);
+      if (e.response.status === 401) {
+        setError('Session Expired.')
+      }
     } 
 
   }

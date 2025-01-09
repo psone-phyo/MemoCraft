@@ -12,7 +12,6 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import initials from "initials";
 import { useNavigate } from "react-router-dom";
-const pages = ["Products", "Pricing", "Blog"];
 
 function ResponsiveAppBar({ userInfo }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -88,13 +87,6 @@ function ResponsiveAppBar({ userInfo }) {
               onClose={handleCloseNavMenu}
               sx={{ display: { xs: "block", md: "none" } }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: "center" }}>
-                    <p className="text-sky-900">{page}</p>
-                  </Typography>
-                </MenuItem>
-              ))}
             </Menu>
           </Box>
 
@@ -117,15 +109,7 @@ function ResponsiveAppBar({ userInfo }) {
             <p className="text-sky-900">MemoCraft</p>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                <p className="text-sky-900">{page}</p>
-              </Button>
-            ))}
+            
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
